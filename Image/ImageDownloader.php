@@ -56,7 +56,7 @@ class ImageDownloader
     public function download($originFile, $downloadFolder, $name = null)
     {
         if (false === $this->isValidOriginFile($originFile)) {
-            throw new ImageException(sprintf('The image url "%s" is not valid.', $originFile));
+            throw new ImageException(sprintf('The origin file "%s" is not valid.', $originFile));
         }
 
         if (null === $name) {
