@@ -1,0 +1,27 @@
+{
+    "name":         "tadcka/downloader",
+    "homepage":     "https://github.com/tadcka/Downloader",
+    "description":  "Tadcka downloader component",
+    "keywords":     ["downloader"],
+    "type":         "library",
+    "license":      "MIT",
+    "authors": [
+        {
+            "name":   "Tadas Gliaubicas",
+            "email":  "tadcka89@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "php": ">=5.3.3",
+        "symfony/filesystem": "~2.3"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "~3.7"
+    },
+    "autoload": {
+        "psr-4": {
+            "Tadcka\\Component\\Downloader\\": ""
+        }
+    }
+}
