@@ -36,8 +36,8 @@ class FileTest extends \PHPUnit_Framework_TestCase
 
     public function testMoveWithoutName()
     {
-        $filePath = $this->createFile('test.txt');
-        $file = new File($filePath);
+        $filePath = $this->createTempFile('test.txt');
+        $file = $this->createFile($filePath);
 
         $this->assertEquals('txt', $file->getExtension());
 
@@ -49,8 +49,8 @@ class FileTest extends \PHPUnit_Framework_TestCase
 
     public function testMoveWithFilename()
     {
-        $filePath = $this->createFile('test.txt');
-        $file = new File($filePath);
+        $filePath = $this->createTempFile('test.txt');
+        $file = $this->createFile($filePath);
 
         $this->assertEquals('txt', $file->getExtension());
 
@@ -65,8 +65,8 @@ class FileTest extends \PHPUnit_Framework_TestCase
      */
     public function testMoveWithNotValidFilename()
     {
-        $filePath = $this->createFile('test.txt');
-        $file = new File($filePath);
+        $filePath = $this->createTempFile('test.txt');
+        $file = $this->createFile($filePath);
 
         $this->assertEquals('txt', $file->getExtension());
 
@@ -78,8 +78,8 @@ class FileTest extends \PHPUnit_Framework_TestCase
      */
     public function testMoveWithOverrideFalse()
     {
-        $filePath = $this->createFile('test.txt');
-        $file = new File($filePath);
+        $filePath = $this->createTempFile('test.txt');
+        $file = $this->createFile($filePath);
 
         $this->assertEquals('txt', $file->getExtension());
 
@@ -87,12 +87,24 @@ class FileTest extends \PHPUnit_Framework_TestCase
         $file->move(dirname(__FILE__) . '/tmpe/', null, false);
     }
 
-    private function createFile($filename)
+    private function createTempFile($filename)
     {
         $filePath = dirname(__FILE__) . '/tmp/' . $filename;
         $this->filesystem->dumpFile($filePath, 'test');
 
         return $filePath;
+    }
+
+    /**
+     * Create file.
+     *
+     * @param string $filePath
+     *
+     * @return File
+     */
+    private function createFile($filePath)
+    {
+        return new File($filePath);
     }
 
     /**
