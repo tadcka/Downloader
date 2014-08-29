@@ -33,5 +33,5 @@ Image downloader example:
 
 ``` php
 $imageDownloader = new \Tadcka\Component\Downloader\Image\ImageDownloader();
-$imageDownloader->download(https://test.org/test.png, '/download-test/');
+$imageDownloader->download('https://test.org/test.png', '/download-test/');
 ```
