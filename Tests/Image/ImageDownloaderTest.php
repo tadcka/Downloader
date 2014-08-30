@@ -11,37 +11,50 @@
 
 namespace Tadcka\Component\Downloader\Tests\Image;
 
-use Symfony\Component\Filesystem\Filesystem;
-use Tadcka\Component\Downloader\File;
 use Tadcka\Component\Downloader\Image\ImageDownloader;
+use Tadcka\Component\Downloader\Tests\AbstractDownloaderTest;
 
 /**
  * @author Tadas Gliaubicas <tadcka89@gmail.com>
  *
  * @since 8/27/14 9:31 PM
  */
-class ImageDownloaderTest extends \PHPUnit_Framework_TestCase
+class ImageDownloaderTest extends AbstractDownloaderTest
 {
-    public function testDownload()
-    {
-        $downloader = new ImageDownloader();
-        $originFile = dirname(__FILE__) . '/../MockFiles/test.png';
-        $file = $downloader->download($originFile, $this->getFilePath());
-
-        $this->assertEquals(new File($originFile), $file);
-    }
+    /**
+     * @var ImageDownloader
+     */
+    private $downloader;
 
     /**
      * {@inheritdoc}
      */
-    protected function tearDown()
+    protected function setUp()
     {
-        $filesystem = new Filesystem();
-        $filesystem->remove(array(dirname(__FILE__) . '/../tmp'));
+        $this->downloader = new ImageDownloader();
     }
 
-    private function getFilePath()
+    public function testDownload()
     {
-        return dirname(__FILE__) . '/../tmp';
+        $dirMockFiles = $this->getDirMockFiles();
+        $this->assertEqualsFile($dirMockFiles . 'test.png', $this->downloader);
+        $this->assertEqualsFile($dirMockFiles . 'test.jpg', $this->downloader);
+        $this->assertEqualsFile($dirMockFiles . 'test.gif', $this->downloader);
+    }
+
+    /**
+     * @expectedException \Tadcka\Component\Downloader\Exception\FileNotFoundException
+     */
+    public function testDownloadFileNotFound()
+    {
+        $this->assertEqualsFile($this->getDirMockFiles() . 'fake.png', $this->downloader);
+    }
+
+    /**
+     * @expectedException \Tadcka\Component\Downloader\Exception\ImageException
+     */
+    public function testDownloadFileNotImage()
+    {
+        $this->assertEqualsFile($this->getDirMockFiles() . 'test.txt', $this->downloader);
     }
 }

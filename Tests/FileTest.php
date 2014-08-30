@@ -29,7 +29,7 @@ class FileTest extends \PHPUnit_Framework_TestCase
     /**
      * {@inheritdoc}
      */
-    public function setUp()
+    protected function setUp()
     {
         $this->filesystem = new Filesystem();
     }
@@ -41,7 +41,7 @@ class FileTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals('txt', $file->getExtension());
 
-        $file = $file->move(dirname(__FILE__) . '/tmpe/', null, true);
+        $file = $file->move($this->getDirTmpMove(), null, true);
 
         $this->assertTrue($this->filesystem->exists($file));
         $this->assertEquals('txt', $file->getExtension());
@@ -54,7 +54,7 @@ class FileTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals('txt', $file->getExtension());
 
-        $file = $file->move(dirname(__FILE__) . '/tmpe/', 'new_Test-09');
+        $file = $file->move($this->getDirTmpMove(), 'new_Test-09');
 
         $this->assertTrue($this->filesystem->exists($file));
         $this->assertEmpty($file->getExtension());
@@ -70,7 +70,7 @@ class FileTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals('txt', $file->getExtension());
 
-        $file->move(dirname(__FILE__) . '/tmpe/', 'new_Žęėčęė');
+        $file->move($this->getDirTmpMove(), 'new_Žęėčęė');
     }
 
     /**
@@ -83,13 +83,13 @@ class FileTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals('txt', $file->getExtension());
 
-        $file = $file->move(dirname(__FILE__) . '/tmpe/', null, false);
-        $file->move(dirname(__FILE__) . '/tmpe/', null, false);
+        $file = $file->move($this->getDirTmpMove(), null, false);
+        $file->move($this->getDirTmpMove(), null, false);
     }
 
     private function createTempFile($filename)
     {
-        $filePath = dirname(__FILE__) . '/tmp/' . $filename;
+        $filePath = $this->getDirTmp() . $filename;
         $this->filesystem->dumpFile($filePath, 'test');
 
         return $filePath;
@@ -108,11 +108,26 @@ class FileTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @return string
+     */
+    private function getDirTmp()
+    {
+        return dirname(__FILE__) . '/tmp/';
+    }
+
+    /**
+     * @return string
+     */
+    private function getDirTmpMove()
+    {
+        return dirname(__FILE__) . '/tmp/move';
+    }
+
+    /**
      * {@inheritdoc}
      */
     protected function tearDown()
     {
-        $dirname = dirname(__FILE__);
-        $this->filesystem->remove(array($dirname . '/tmp/', $dirname . '/tmpe/'));
+        $this->filesystem->remove($this->getDirTmp());
     }
 }
