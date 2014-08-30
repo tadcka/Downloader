@@ -69,13 +69,11 @@ class File extends \SplFileInfo
      */
     public function move($directory, $name = null, $overwrite = false)
     {
-        $target = $this->getTargetFile($directory, $name);
+        $targetFile = $this->getTargetFile($directory, $name);
+        $this->fileSystem->rename($this->getPathname(), $targetFile, $overwrite);
+        $this->fileSystem->chmod($targetFile, 0666, umask());
 
-        $this->fileSystem->rename($this->getPathname(), $target, $overwrite);
-
-        @chmod($target, 0666 & ~umask());
-
-        return $target;
+        return $targetFile;
     }
 
     /**
