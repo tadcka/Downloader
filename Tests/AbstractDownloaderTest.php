@@ -30,6 +30,9 @@ abstract class AbstractDownloaderTest extends \PHPUnit_Framework_TestCase
      */
     protected $tmpDir;
 
+    /**
+     * {@inheritdoc}
+     */
     protected function setUp()
     {
         $this->tmpDir = sys_get_temp_dir() . '/sf2';
@@ -37,6 +40,9 @@ abstract class AbstractDownloaderTest extends \PHPUnit_Framework_TestCase
         $this->filesystem->remove($this->tmpDir);
     }
 
+    /**
+     * {@inheritdoc}
+     */
     protected function tearDown()
     {
         $this->filesystem->remove($this->tmpDir);
