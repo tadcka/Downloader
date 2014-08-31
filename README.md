@@ -29,7 +29,7 @@ $ php composer.phar update tadcka/downloader
 
 ### Step 3: How use?
 
-Image downloader example:
+File downloader example:
 
 ``` php
 use Tadcka\Component\Downloader\FileDownloader;
