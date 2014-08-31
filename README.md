@@ -32,6 +32,23 @@ $ php composer.phar update tadcka/downloader
 Image downloader example:
 
 ``` php
-$imageDownloader = new \Tadcka\Component\Downloader\Image\ImageDownloader();
+use Tadcka\Component\Downloader\FileDownloader;
+use Symfony\Component\Filesystem\Filesystem;
+
+...
+
+$fileDownloader = new FileDownloader(new Filesystem());
+$fileDownloader->download('https://test.org/test.txt', '/download-test/');
+```
+
+Image downloader example:
+
+``` php
+use Tadcka\Component\Downloader\Image\ImageDownloader;
+use Symfony\Component\Filesystem\Filesystem;
+
+...
+
+$imageDownloader = new ImageDownloader(new Filesystem());
 $imageDownloader->download('https://test.org/test.png', '/download-test/');
 ```
