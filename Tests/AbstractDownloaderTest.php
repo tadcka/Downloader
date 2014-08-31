@@ -12,38 +12,40 @@
 namespace Tadcka\Component\Downloader\Tests;
 
 use Symfony\Component\Filesystem\Filesystem;
-use Tadcka\Component\Downloader\File;
 
 /**
  * @author Tadas Gliaubicas <tadcka89@gmail.com>
  *
- * @since 8/30/14 11:42 AM
+ * @since 8/31/14 4:49 PM
  */
 abstract class AbstractDownloaderTest extends \PHPUnit_Framework_TestCase
 {
-    protected function assertEqualsFile($originFile, $downloader)
-    {
-        $this->assertEquals(new File($originFile), $downloader->download($originFile, $this->getFilePath()));
-    }
+    /**
+     * @var Filesystem
+     */
+    protected $filesystem;
 
     /**
-     * {@inheritdoc}
+     * @var string
      */
-    protected function tearDown()
+    protected $tmpDir;
+
+    protected function setUp()
     {
-        $filesystem = new Filesystem();
-        $filesystem->remove($this->getFilePath());
+        $this->tmpDir = sys_get_temp_dir() . '/sf2';
+        $this->filesystem = new Filesystem();
+        $this->filesystem->remove($this->tmpDir);
     }
 
-    private function getFilePath()
+    protected function tearDown()
     {
-        return dirname(__FILE__) . '/tmp';
+        $this->filesystem->remove($this->tmpDir);
     }
 
     /**
      * @return string
      */
-    protected function getDirMockFiles()
+    protected function getMockFilesDir()
     {
         return dirname(__FILE__) . '/MockFiles/';
     }

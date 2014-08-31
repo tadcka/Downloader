@@ -30,18 +30,19 @@ class File extends \SplFileInfo
     /**
      * Construct.
      *
+     * @param Filesystem $fileSystem
      * @param string $path
      * @param bool $checkPath
      *
      * @throws FileNotFoundException
      */
-    public function __construct($path, $checkPath = true)
+    public function __construct(Filesystem $fileSystem, $path, $checkPath = true)
     {
         if ($checkPath && !is_file($path)) {
             throw new FileNotFoundException($path);
         }
 
-        $this->fileSystem = new Filesystem();
+        $this->fileSystem = $fileSystem;
 
         parent::__construct($path);
     }
@@ -98,7 +99,7 @@ class File extends \SplFileInfo
 
         $target = rtrim($directory, '/\\') . DIRECTORY_SEPARATOR . (null === $name ? $this->getBasename() : $name);
 
-        return new File($target, false);
+        return new File($this->fileSystem, $target, false);
     }
 
     /**

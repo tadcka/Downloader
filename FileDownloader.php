@@ -27,10 +27,12 @@ class FileDownloader
 
     /**
      * Constructor.
+     *
+     * @param Filesystem $fileSystem
      */
-    public function __construct()
+    public function __construct(Filesystem $fileSystem)
     {
-        $this->fileSystem = new Filesystem();
+        $this->fileSystem = $fileSystem;
     }
 
     /**
@@ -52,7 +54,7 @@ class FileDownloader
         $targetFile = rtrim($downloadFolder, '/\\') . DIRECTORY_SEPARATOR . $filename;
         $this->fileSystem->copy($originFile, $targetFile);
 
-        return new File($targetFile);
+        return new File($this->fileSystem, $targetFile);
     }
 
     /**

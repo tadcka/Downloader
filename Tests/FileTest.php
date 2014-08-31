@@ -11,7 +11,6 @@
 
 namespace Tadcka\Component\Downloader\Tests;
 
-use Symfony\Component\Filesystem\Filesystem;
 use Tadcka\Component\Downloader\File;
 
 /**
@@ -19,21 +18,8 @@ use Tadcka\Component\Downloader\File;
  *
  * @since 8/27/14 10:25 PM
  */
-class FileTest extends \PHPUnit_Framework_TestCase
+class FileTest extends AbstractDownloaderTest
 {
-    /**
-     * @var Filesystem
-     */
-    private $filesystem;
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function setUp()
-    {
-        $this->filesystem = new Filesystem();
-    }
-
     public function testMoveWithoutName()
     {
         $filePath = $this->createTempFile('test.txt');
@@ -41,7 +27,7 @@ class FileTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals('txt', $file->getExtension());
 
-        $file = $file->move($this->getDirTmpMove(), null, true);
+        $file = $file->move($this->getTmpMoveDir(), null, true);
 
         $this->assertTrue($this->filesystem->exists($file));
         $this->assertEquals('txt', $file->getExtension());
@@ -54,7 +40,7 @@ class FileTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals('txt', $file->getExtension());
 
-        $file = $file->move($this->getDirTmpMove(), 'new_Test-09');
+        $file = $file->move($this->getTmpMoveDir(), 'new_Test-09');
 
         $this->assertTrue($this->filesystem->exists($file));
         $this->assertEmpty($file->getExtension());
@@ -70,7 +56,7 @@ class FileTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals('txt', $file->getExtension());
 
-        $file->move($this->getDirTmpMove(), 'new_Žęėčęė');
+        $file->move($this->getTmpMoveDir(), 'new_Žęėčęė');
     }
 
     /**
@@ -83,13 +69,13 @@ class FileTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals('txt', $file->getExtension());
 
-        $file = $file->move($this->getDirTmpMove(), null, false);
-        $file->move($this->getDirTmpMove(), null, false);
+        $file = $file->move($this->getTmpMoveDir(), null, false);
+        $file->move($this->getTmpMoveDir(), null, false);
     }
 
     private function createTempFile($filename)
     {
-        $filePath = $this->getDirTmp() . $filename;
+        $filePath = $this->tmpDir . $filename;
         $this->filesystem->dumpFile($filePath, 'test');
 
         return $filePath;
@@ -104,30 +90,14 @@ class FileTest extends \PHPUnit_Framework_TestCase
      */
     private function createFile($filePath)
     {
-        return new File($filePath);
+        return new File($this->filesystem, $filePath);
     }
 
     /**
      * @return string
      */
-    private function getDirTmp()
+    private function getTmpMoveDir()
     {
-        return dirname(__FILE__) . '/tmp/';
-    }
-
-    /**
-     * @return string
-     */
-    private function getDirTmpMove()
-    {
-        return dirname(__FILE__) . '/tmp/move';
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function tearDown()
-    {
-        $this->filesystem->remove($this->getDirTmp());
+        return $this->tmpDir . '/move';
     }
 }

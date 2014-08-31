@@ -11,6 +11,7 @@
 
 namespace Tadcka\Component\Downloader\Tests\Image;
 
+use Tadcka\Component\Downloader\File;
 use Tadcka\Component\Downloader\Image\ImageDownloader;
 use Tadcka\Component\Downloader\Tests\AbstractDownloaderTest;
 
@@ -31,15 +32,9 @@ class ImageDownloaderTest extends AbstractDownloaderTest
      */
     protected function setUp()
     {
-        $this->downloader = new ImageDownloader();
-    }
+        parent::setUp();
 
-    public function testDownload()
-    {
-        $dirMockFiles = $this->getDirMockFiles();
-        $this->assertEqualsFile($dirMockFiles . 'test.png', $this->downloader);
-        $this->assertEqualsFile($dirMockFiles . 'test.jpg', $this->downloader);
-        $this->assertEqualsFile($dirMockFiles . 'test.gif', $this->downloader);
+        $this->downloader = new ImageDownloader($this->filesystem);
     }
 
     /**
@@ -47,7 +42,7 @@ class ImageDownloaderTest extends AbstractDownloaderTest
      */
     public function testDownloadFileNotFound()
     {
-        $this->assertEqualsFile($this->getDirMockFiles() . 'fake.png', $this->downloader);
+        $this->assertEqualsFile($this->getMockFilesDir() . 'fake.png');
     }
 
     /**
@@ -55,6 +50,22 @@ class ImageDownloaderTest extends AbstractDownloaderTest
      */
     public function testDownloadFileNotImage()
     {
-        $this->assertEqualsFile($this->getDirMockFiles() . 'test.txt', $this->downloader);
+        $this->assertEqualsFile($this->getMockFilesDir() . 'test.txt');
+    }
+
+    public function testDownload()
+    {
+        $mockFilesDir = $this->getMockFilesDir();
+        $this->assertEqualsFile($mockFilesDir . 'test.png');
+        $this->assertEqualsFile($mockFilesDir . 'test.jpg');
+        $this->assertEqualsFile($mockFilesDir . 'test.gif');
+    }
+
+    protected function assertEqualsFile($originFile)
+    {
+        $this->assertEquals(
+            new File($this->filesystem, $originFile),
+            $this->downloader->download($originFile, $this->tmpDir)
+        );
     }
 }

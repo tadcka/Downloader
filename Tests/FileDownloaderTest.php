@@ -11,6 +11,7 @@
 
 namespace Tadcka\Component\Downloader\Tests;
 
+use Tadcka\Component\Downloader\File;
 use Tadcka\Component\Downloader\FileDownloader;
 
 /**
@@ -30,14 +31,9 @@ class FileDownloaderTest extends AbstractDownloaderTest
      */
     protected function setUp()
     {
-        $this->downloader = new FileDownloader();
-    }
+        parent::setUp();
 
-    public function testDownload()
-    {
-        $dirMockFiles = $this->getDirMockFiles();
-        $this->assertEqualsFile($dirMockFiles . 'test.png', $this->downloader);
-        $this->assertEqualsFile($dirMockFiles . 'test.txt', $this->downloader);
+        $this->downloader = new FileDownloader($this->filesystem);
     }
 
     /**
@@ -45,6 +41,21 @@ class FileDownloaderTest extends AbstractDownloaderTest
      */
     public function testDownloadFileNotFound()
     {
-        $this->assertEqualsFile($this->getDirMockFiles() . 'fake.txt', $this->downloader);
+        $this->assertEqualsFile($this->getMockFilesDir() . 'fake.txt');
+    }
+
+    public function testDownload()
+    {
+        $mockFilesDir = $this->getMockFilesDir();
+        $this->assertEqualsFile($mockFilesDir . 'test.png');
+        $this->assertEqualsFile($mockFilesDir . 'test.txt');
+    }
+
+    protected function assertEqualsFile($originFile)
+    {
+        $this->assertEquals(
+            new File($this->filesystem, $originFile),
+            $this->downloader->download($originFile, $this->tmpDir)
+        );
     }
 }
